@@ -11,20 +11,20 @@ $(function () {
 	halfWidth = 20;
 	robot.polygon([
 		[0,0], // a
-		[halfWidth - 7,0], // b
-		[halfWidth - 7,10], // c
+		[halfWidth - 8,0], // b
+		[halfWidth - 8,10], // c
 		[halfWidth,10], // d
 		[halfWidth,30], // e
 		[halfWidth + 5,30], // f
 		[halfWidth + 5,35], // g
-		[halfWidth - 2,35], // h
-		[halfWidth - 2,15], // i
+		[halfWidth - 4,35], // h
+		[halfWidth - 4,15], // i
 		[halfWidth - 5,15], // j
 		[halfWidth - 5,45], // k
 		[halfWidth,45], // l
 		[halfWidth,50], // m
-		[halfWidth - 8,50], // n
-		[halfWidth - 8,40], // o
+		[halfWidth - 10,50], // n
+		[halfWidth - 10,40], // o
 		[0,40] // p
 	]);
 
