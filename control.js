@@ -61,10 +61,31 @@ $(function () {
 	rightArrow = makeArrow('right');
 	downArrow = makeArrow('down');
 
-	leftArrow.click(controlFunctions.left(leftArrow));
+	var clickState = {};
 	leftArrow.on('mousedown', function () {
 		leftArrow.fill('red');
+
+		clickState.clicking = true;
+		clickState.intervalid = window.setInterval(function () {
+			console.log('setinterval!');
+		}, 1000);
+
+		console.log(clickState);
 	});
+
+	var notClickedFunction = function () {
+		if (!clickState.clicking) {
+			return;
+		}
+
+		clickState.clicking = false;
+		leftArrow.fill('black');
+		console.log(clickState);
+		window.clearTimeout(clickState.intervalid);
+	};
+
+	leftArrow.on('mouseup', notClickedFunction);
+	leftArrow.on('mouseout', notClickedFunction);
 
 	upArrow.on('mousedown', function () {
 		upArrow.fill('red');
