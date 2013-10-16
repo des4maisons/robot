@@ -65,10 +65,21 @@ $(function () {
 	leftArrow.on('mousedown', function () {
 		leftArrow.fill('red');
 
+		var sendDirective = function () {
+			console.log('posting left!');
+			$.ajax({
+				url: 'http://localhost:5000/go/left',
+				type: 'POST'
+			}).error(function () {
+				console.log('error posting left');
+			}).success(function () {
+				console.log('success posting left');
+			});
+		};
+
+		sendDirective();
 		clickState.clicking = true;
-		clickState.intervalid = window.setInterval(function () {
-			console.log('setinterval!');
-		}, 1000);
+		clickState.intervalid = window.setInterval(sendDirective, 100);
 
 		console.log(clickState);
 	});
