@@ -22,94 +22,59 @@ $(function () {
 		.group()
 		.attr('transform', 'translate(100,100)');
 
-	var makeArrow = function (direction) {
-		directionToRotation = {
-			left: 90*2,
-			right: 90*0,
-			up: 90*3,
-			down: 90*1
-		};
+	var arrowDirections = ['right', 'down', 'left', 'up'];
 
+	// create all the svg arrows
+	var arrows = {};
+	$.each(arrowDirections, function (index, direction) {
+		var rotation = 90*index;
 		var directedArrow = controls
 			.group()
 			.attr({
 				id: direction + '-arrow',
-				transform: 'rotate(' + directionToRotation[direction] + ')',
+				transform: 'rotate(' + rotation + ')',
 			});
-		return directedArrow.use(arrow);
-	};
+		directedArrow.use(arrow);
+		arrows[direction] = directedArrow;
+	});
 
-	var controlFunctions = function () {
-		var direct = function (direction) {
-			return function (arrow) {
-				return function () {
-					arrow.fill('black');
-				};
+	// attach on-click and off-click listeners to all arrows
+	$.each(arrowDirections, function (index, direction) {
+		var arrow = arrows[direction];
+
+		var clickState = {};
+		arrow.on('mousedown', function () {
+			clickState.clicking = true;
+			arrow.fill('red');
+			var sendDirective = function () {
+				console.log('attempting to go ' + direction);
+				$.ajax({
+					url: 'http://localhost:5000/go/' + direction,
+					type: 'POST'
+				}).error(function () {
+					console.log('error going ' + direction);
+				}).success(function () {
+					console.log('success going ' + direction);
+				});
 			};
+
+			sendDirective();
+			clickState.intervalid = window.setInterval(sendDirective, 100);
+			console.log(clickState);
+		});
+
+		var notClickedFunction = function () {
+			if (!clickState.clicking) {
+				return;
+			}
+
+			clickState.clicking = false;
+			arrow.fill('black');
+			console.log(clickState);
+			window.clearTimeout(clickState.intervalid);
 		};
 
-		return {
-			up: direct('up'),
-			down: direct('down'),
-			left: direct('left'),
-			right: direct('right')
-		};
-	}();
-
-	leftArrow = makeArrow('left');
-	upArrow = makeArrow('up');
-	rightArrow = makeArrow('right');
-	downArrow = makeArrow('down');
-
-	var clickState = {};
-	leftArrow.on('mousedown', function () {
-		leftArrow.fill('red');
-
-		var sendDirective = function () {
-			console.log('posting left!');
-			$.ajax({
-				url: 'http://localhost:5000/go/left',
-				type: 'POST'
-			}).error(function () {
-				console.log('error posting left');
-			}).success(function () {
-				console.log('success posting left');
-			});
-		};
-
-		sendDirective();
-		clickState.clicking = true;
-		clickState.intervalid = window.setInterval(sendDirective, 100);
-
-		console.log(clickState);
+		arrow.on('mouseup', notClickedFunction);
+		arrow.on('mouseout', notClickedFunction);
 	});
-
-	var notClickedFunction = function () {
-		if (!clickState.clicking) {
-			return;
-		}
-
-		clickState.clicking = false;
-		leftArrow.fill('black');
-		console.log(clickState);
-		window.clearTimeout(clickState.intervalid);
-	};
-
-	leftArrow.on('mouseup', notClickedFunction);
-	leftArrow.on('mouseout', notClickedFunction);
-
-	upArrow.on('mousedown', function () {
-		upArrow.fill('red');
-	});
-	upArrow.click(controlFunctions.up(upArrow));
-
-	rightArrow.on('mousedown', function () {
-		rightArrow.fill('red');
-	});
-	rightArrow.click(controlFunctions.right(rightArrow));
-
-	downArrow.on('mousedown', function () {
-		downArrow.fill('red');
-	});
-	downArrow.click(controlFunctions.down(downArrow));
 });
