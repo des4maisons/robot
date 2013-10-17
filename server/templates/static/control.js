@@ -56,23 +56,17 @@ $(function () {
 
 		var clickState = {};
 		button.on('mousedown', function () {
-			clickState.clicking = true;
 			button.fill('red');
-			var sendDirective = function () {
-				console.log('attempting to go ' + action);
-				$.ajax({
-					url: '/go/' + action,
-					type: 'POST'
-				}).error(function () {
-					console.log('error going ' + action);
-				}).success(function () {
-					console.log('success going ' + action);
-				});
-			};
+			clickState.clicking = true;
 
-			sendDirective();
-			clickState.intervalid = window.setInterval(sendDirective, 100);
-			console.log(clickState);
+			$.ajax({
+				url: '/go/' + action,
+				type: 'POST'
+			}).error(function () {
+				console.log('error going ' + action);
+			}).success(function () {
+				console.log('success going ' + action);
+			});
 		});
 
 		var notClickedFunction = function () {
@@ -82,8 +76,6 @@ $(function () {
 
 			clickState.clicking = false;
 			button.fill('black');
-			console.log(clickState);
-			window.clearTimeout(clickState.intervalid);
 		};
 
 		button.on('mouseup', notClickedFunction);
