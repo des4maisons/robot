@@ -49,8 +49,7 @@ $(function () {
 		[0,30],
 	]);
 
-	var controls = draw
-		.group()
+	var controls = draw.group()
 		.attr({transform: 'translate(150,130)'});
 
 	var arrowDirections = ['right', 'down', 'left', 'up'];
@@ -62,7 +61,7 @@ $(function () {
 		var directedArrow = controls
 			.group()
 			.attr({
-				id: direction + '-arrow',
+				id: direction + '-button',
 				transform: 'rotate(' + rotation + ') translate(42)',
 			});
 		directedArrow.use(arrow);
@@ -70,19 +69,23 @@ $(function () {
 	});
 
 	var stop = defs.group();
-	stop.polygon([
-		[0,0.7],
-		[0,1.7],
-		[0.7,2.4],
-		[1.7,2.4],
-		[2.4,1.7],
-		[2.4,0.7],
-		[1.7,0],
-		[0.7,0]
-	]).attr({
-		transform: 'scale(31) translate(-1.2,-1.2)'
-	});
-	buttons.stop = controls.use(stop);
+	stop.circle(1)
+		.attr({
+			transform: 'scale(60) translate(-0.5,-0.5)'
+		});
+	stop.circle(1)
+		.stroke({color: 'grey', width: 0.25})
+		.attr({
+			transform: 'scale(30) translate(-0.5,-0.5)'
+		});
+	stop.rect(0.5,1)
+		.attr({
+			transform: 'scale(23) translate(-0.25,-1)'
+		});
+
+	buttons.stop = controls.group()
+		.attr({id: 'stop-button'});
+	buttons.stop.use(stop);
 
 	var actions = arrowDirections.concat(['stop']);
 	// attach on-click and off-click listeners to all arrows
@@ -91,7 +94,7 @@ $(function () {
 
 		var clickState = {};
 		button.on('mousedown', function () {
-			button.fill('#0f0');
+			button.fill('#0a0');
 			clickState.clicking = true;
 
 			$.ajax({
@@ -109,8 +112,8 @@ $(function () {
 				return;
 			}
 
+			button.attr({fill: null});
 			clickState.clicking = false;
-			button.attr('fill', null);
 		};
 
 		button.on('mouseup', notClickedFunction);
