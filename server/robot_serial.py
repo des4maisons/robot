@@ -1,10 +1,15 @@
 import serial
+import logging
 
 
 class RobotSerial(object):
     def __init__(self):
-        return
-        self.serial = serial.Serial('/dev/ttyUSB0')
+        try:
+            self.serial = serial.Serial('/dev/ttyUSB0')
+        except serial.SerialException, e:
+            logging.warning(e.message + "\nfalling back to logger")
+            self.serial = lambda: 0
+            self.serial.write = logging.debug
 
     def write(self, message):
-        print('would-be robot message: ' + message)
+        self.serial.write(message)

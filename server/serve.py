@@ -1,12 +1,16 @@
+#!../env/bin/python
+
 from flask import Flask
 from flask import render_template
 from flask import url_for
+import logging
 from robot import Robot
 
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.debug = False
 robot = Robot()
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 @app.route('/go/<direction>', methods=['POST'])

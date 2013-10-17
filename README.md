@@ -26,7 +26,7 @@ pip install -r requirements.txt
 
 Using Arduino-IDE, load `robot.ino` onto the arduino connected to your Rover.
 
-Connect the Arduino to the Beagle Bone over serial.
+Connect the Arduino to the Beagle Bone over serial usb.
 
 Running
 ---
