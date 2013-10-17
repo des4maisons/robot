@@ -18,7 +18,6 @@ def go(direction):
 
 @app.route('/control/<filename>')
 def control_html(filename='control.html'):
-    print url_for('static', filename=filename)
     return render_template(url_for('static', filename=filename))
 
 

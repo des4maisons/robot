@@ -24,8 +24,8 @@ $(function () {
 
 	var arrowDirections = ['right', 'down', 'left', 'up'];
 
-	// create all the svg arrows
-	var arrows = {};
+	// create all the svg buttons
+	var buttons = {};
 	$.each(arrowDirections, function (index, direction) {
 		var rotation = 90*index;
 		var directedArrow = controls
@@ -35,26 +35,38 @@ $(function () {
 				transform: 'rotate(' + rotation + ')',
 			});
 		directedArrow.use(arrow);
-		arrows[direction] = directedArrow;
+		buttons[direction] = directedArrow;
 	});
 
+	var stop = defs.group();
+	var stopPolyline = stop.polygon([
+		[0,0],
+		[0,20],
+		[100,20],
+		[100,0]
+	]);
+	buttons.stop = controls.use(stop).attr({
+		'transform' : 'translate(-50, 50)'
+	});
+
+	var actions = arrowDirections.concat(['stop']);
 	// attach on-click and off-click listeners to all arrows
-	$.each(arrowDirections, function (index, direction) {
-		var arrow = arrows[direction];
+	$.each(actions, function (index, action) {
+		var button = buttons[action];
 
 		var clickState = {};
-		arrow.on('mousedown', function () {
+		button.on('mousedown', function () {
 			clickState.clicking = true;
-			arrow.fill('red');
+			button.fill('red');
 			var sendDirective = function () {
-				console.log('attempting to go ' + direction);
+				console.log('attempting to go ' + action);
 				$.ajax({
-					url: 'http://localhost:5000/go/' + direction,
+					url: 'http://localhost:5000/go/' + action,
 					type: 'POST'
 				}).error(function () {
-					console.log('error going ' + direction);
+					console.log('error going ' + action);
 				}).success(function () {
-					console.log('success going ' + direction);
+					console.log('success going ' + action);
 				});
 			};
 
@@ -69,12 +81,12 @@ $(function () {
 			}
 
 			clickState.clicking = false;
-			arrow.fill('black');
+			button.fill('black');
 			console.log(clickState);
 			window.clearTimeout(clickState.intervalid);
 		};
 
-		arrow.on('mouseup', notClickedFunction);
-		arrow.on('mouseout', notClickedFunction);
+		button.on('mouseup', notClickedFunction);
+		button.on('mouseout', notClickedFunction);
 	});
 });

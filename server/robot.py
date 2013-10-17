@@ -9,10 +9,13 @@ class Robot(object):
         self.serial.write('r')
 
     def up(self):
-        self.serial.write('u')
+        self.serial.write('f')
 
     def down(self):
-        self.serial.write('d')
+        self.serial.write('b')
 
     def left(self):
         self.serial.write('l')
+
+    def stop(self):
+        self.serial.write('s')
