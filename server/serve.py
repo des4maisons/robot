@@ -1,13 +1,18 @@
 from flask import Flask
 from flask import render_template
 from flask import url_for
-app = Flask(__name__)
+from robot import Robot
 
+app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
+app.debug = False
+robot = Robot()
 
 
 @app.route('/go/<direction>', methods=['POST'])
 def go(direction):
+    send_directive = getattr(robot, direction)
+    send_directive()
     return direction
 
 
@@ -18,4 +23,4 @@ def control_html(filename='control.html'):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
