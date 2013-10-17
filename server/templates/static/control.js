@@ -2,12 +2,48 @@ $(function () {
 	var draw = SVG('controls');
 	var defs = draw.defs();
 
+	/* ROBOT SVG */
+
+	var robot = defs.group().attr({
+		transform: 'translate(0,0)'
+	});
+
+	halfWidth = 20;
+	robot.polygon([
+		[0,0], // a
+		[halfWidth - 7,0], // b
+		[halfWidth - 7,10], // c
+		[halfWidth,10], // d
+		[halfWidth,30], // e
+		[halfWidth + 5,30], // f
+		[halfWidth + 5,35], // g
+		[halfWidth - 2,35], // h
+		[halfWidth - 2,15], // i
+		[halfWidth - 5,15], // j
+		[halfWidth - 5,45], // k
+		[halfWidth,45], // l
+		[halfWidth,50], // m
+		[halfWidth - 8,50], // n
+		[halfWidth - 8,40], // o
+		[0,40] // p
+	]);
+
+	draw.use(robot).attr({
+		transform: 'translate(150,0) scale(6,6)'
+	}).fill('grey');
+	draw.use(robot).attr({
+		transform: 'translate(150,0) scale(6,6) matrix(-1, 0, 0, 1, 0, 0)'
+	}).fill('grey');
+
+
+	/* button SVG */
+
 	var arrow = defs.group().attr({
 		id: 'rightarrow',
 		transform: 'translate(3,-20)'
 	});
 
-	var arrowPolyline = arrow.polygon([
+	arrow.polygon([
 		[0,20],
 		[10,30],
 		[26,30],
@@ -20,7 +56,7 @@ $(function () {
 
 	var controls = draw
 		.group()
-		.attr('transform', 'translate(100,100)');
+		.attr({transform: 'translate(150,130)'});
 
 	var arrowDirections = ['right', 'down', 'left', 'up'];
 
@@ -39,14 +75,14 @@ $(function () {
 	});
 
 	var stop = defs.group();
-	var stopPolyline = stop.polygon([
+	stop.polygon([
 		[0,0],
 		[0,20],
 		[100,20],
 		[100,0]
 	]);
 	buttons.stop = controls.use(stop).attr({
-		'transform' : 'translate(-50, 50)'
+		transform: 'translate(-50, 50)'
 	});
 
 	var actions = arrowDirections.concat(['stop']);
@@ -56,7 +92,7 @@ $(function () {
 
 		var clickState = {};
 		button.on('mousedown', function () {
-			button.fill('red');
+			button.fill('#0f0');
 			clickState.clicking = true;
 
 			$.ajax({
