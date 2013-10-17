@@ -61,7 +61,7 @@ $(function () {
 			var sendDirective = function () {
 				console.log('attempting to go ' + action);
 				$.ajax({
-					url: 'http://localhost:5000/go/' + action,
+					url: '/go/' + action,
 					type: 'POST'
 				}).error(function () {
 					console.log('error going ' + action);
